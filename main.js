@@ -1,4 +1,5 @@
 var banner = document.querySelector(".banner");
+var micIcon = document.querySelector("#mic-icon");
 
 function myFunction() {
     var input, filter, ul, li, a, i, txtValue;
@@ -19,6 +20,32 @@ function myFunction() {
     }
 }
 
+function startDictation() {
+
+  if (window.hasOwnProperty('webkitSpeechRecognition')) {
+
+    var recognition = new webkitSpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.lang = "en-US";
+    recognition.start();
+
+    recognition.onresult = function(e) {
+      document.getElementById('myInput').value = e.results[0][0].transcript;
+      recognition.stop();
+      myFunction();
+    };
+
+    recognition.onerror = function(e) {
+      recognition.stop();
+    }
+
+  }
+}
+
+micIcon.addEventListener("click", startDictation);
 
 var menuIcon = document.querySelector(".menu-icon");
 var sidebar = document.querySelector(".sidebar");
@@ -28,3 +55,10 @@ menuIcon.onclick = function(){
  sidebar.classList.toggle("smallside");
  container.classList.toggle("large-container");
 }
+
+// select the HTML element to output the transcript
+var transcriptOutput = document.getElementsByClassName("transcript-output");
+
+// update the content with the transcript text
+transcriptOutput.textContent = transcript;
+
